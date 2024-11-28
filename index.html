@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+<title>InsigniaAI</title>
+<link href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" rel="stylesheet"/>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --color: #ffffff; 
+        --background: #000000; 
+        --size: 3;
+        --animation: terminal-blink;
+        --primary-bg: #000000;
+        --primary-color: white;
+    }
+
+    body {
+        background-color: var(--background);
+        color: var(--color);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        font-family: 'Orbitron', monospace;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .navbar {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: #111;
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px;
+    }
+
+    .navbar a {
+        color: var(--color);
+        text-decoration: none;
+        padding: 10px;
+        font-size: 1.2rem;
+    }
+
+    .navbar a:hover {
+        background-color: #444;
+        border-radius: 5px;
+    }
+
+    .terminal-container {
+        width: 70%; 
+        max-width: 10000px; 
+        height: 80vh; 
+        padding: 20px;
+        background-color: var(--background);
+        color: var(--color);
+        font-size: 1.4rem; 
+        overflow: auto;
+        border: 2px solid var(--color); 
+        border-radius: 10px;
+    }
+
+    #loading-bar-container {
+        width: 100%;
+        background-color: #333;
+        border: 1px solid #555;
+        height: 20px;
+        border-radius: 5px;
+        margin: 10px 0;
+    }
+
+    #loading-bar {
+        width: 0;
+        height: 100%;
+        background-color: #f32121;
+        border-radius: 5px;
+    }
+
+    .restart-button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 18px;
+        font-family: 'Orbitron', monospace;
+        color: white;
+        background-color: #f32121;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    .restart-button:hover {
+        background-color: #c91818;
+    }
+
+
+        /* Large modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            overflow: auto;
+            padding-top: 10%;
+        }
+
+        .modal-content {
+            background-color: #000;
+            color: white;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 900px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+            height: 80%;
+        }
+
+        .modal-header {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-body {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+</style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="htb.html">How to Buy</a>
+        <a href="faq.html">FAQ</a>
+        <a href="blog.html">Blog</a>
+    </div>
+
+    <div class="terminal-container">
+        <div class="terminal" id="terminal"></div>
+    </div>
+
+    <!-- Modal HTML -->
+    <div id="docsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>InsigniaAI Documentation</h2>
+            </div>
+            <div class="modal-body">
+                <h3>Overview</h3>
+                <p>InsigniaAI is an advanced AI-powered platform that offers users an intuitive terminal interface to interact with artificial intelligence. It is designed to provide seamless communication and efficient data processing for both technical and non-technical users. By leveraging the latest advancements in AI, it offers a user-friendly experience for various tasks such as text analysis, predictive modeling, and summarization.</p>
+                
+                <h3>Architecture</h3>
+                <p>The architecture of InsigniaAI is built on a robust cloud-based infrastructure, utilizing cutting-edge technologies like machine learning and natural language processing (NLP). The AI model is deployed on scalable cloud servers, ensuring high availability and fast response times. The system is designed for flexibility, enabling easy integration with other services and tools through APIs and command-line interfaces.</p>
+
+                <h3>AI Technology</h3>
+                <p>InsigniaAI is powered by advanced artificial intelligence models, including large language models (LLMs) that understand and process human language with exceptional accuracy. The platform employs deep learning algorithms and NLP techniques to generate human-like responses, process complex queries, and perform various tasks such as content generation, summarization, and predictive analysis. The AI is continuously trained on diverse datasets to ensure its responses are up-to-date, relevant, and contextually appropriate.</p>
+
+                <h3>Roadmap</h3>
+                <ul>
+                    <li><strong>Phase 1 - Initial Launch:</strong> Basic AI-powered terminal interface, with simple commands like AI chat, system stats, and help command.</li>
+                    <li><strong>Phase 2 - Tool Integration:</strong> Introduction of tools like data analysis, text summarization, and predictive models for enhanced functionality.</li>
+                    <li><strong>Phase 3 - User Personalization:</strong> Personalized user experience with learning capabilities and customizable settings for AI responses.</li>
+                    <li><strong>Phase 4 - API Integration:</strong> Expand the AI's capabilities through API integrations with third-party services for advanced features and scalability.</li>
+                    <li><strong>Phase 5 - Full-Scale Deployment:</strong> Fully optimized platform, offering enterprise-level AI tools and global support.</li>
+                </ul>
+
+                <h3>Security</h3>
+                <p>Security is a top priority for InsigniaAI. We follow industry best practices to ensure the confidentiality and integrity of user data. All communications between users and the platform are encrypted using TLS/SSL protocols. Additionally, the platform is built with secure authentication mechanisms, such as OAuth, to protect user access. Regular security audits and updates are conducted to maintain the highest level of protection.</p>
+
+                <h3>Vision</h3>
+                <p>InsigniaAI envisions a world where AI enhances human potential and makes tasks more efficient and accessible. We strive to build tools that empower individuals and organizations to leverage AI in innovative ways, ultimately contributing to a more productive and insightful future. Our goal is to make advanced AI technology available to everyone, regardless of their technical background.</p>
+            </div>
+        </div>
+    </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
+<script>
+    let systemStatus = {
+        cpuUsage: Math.floor(Math.random() * (60 - 20 + 1)) + 20,  // CPU usage between 20% and 60%
+        memoryUsage: Math.floor(Math.random() * (70 - 50 + 1)) + 50,  // Memory usage between 50% and 70%
+        diskSpace: 76,  // Disk space set to always be 76%
+    };
+
+    async function getAIResponse(prompt) {
+        const apiUrl = "https://api.together.ai/v1/chat/completions"; 
+        const apiKey = "3cef9180f995a94db05f300c4920efb6e00b267e7c20fc0e235d7ec681f7de0a"; 
+        const payload = {
+            model: "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO",
+            messages: [
+                { role: 'system', content: 'You are a helpful assistant.' },
+                { role: 'user', content: prompt }
+            ],
+            max_tokens: 50, 
+            temperature: 0.7,
+            top_p: 0.7,
+            top_k: 50,
+            repetition_penalty: 1,
+            stop: ["<|eot_id|>", "<|eom_id|>"],
+            stream: false
+        };
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            if (data.choices && data.choices[0].message.content) {
+                let aiResponse = data.choices[0].message.content;
+
+                // Post-process the response to limit it to 2-3 sentences
+                let sentences = aiResponse.split('.'); // Split the response into sentences
+                sentences = sentences.filter(sentence => sentence.trim() !== ''); // Remove empty sentences
+
+                // Join only the first 2-3 sentences
+                const limitedResponse = sentences.slice(0, 3).join('. ') + '.';
+
+                return limitedResponse;
+            } else {
+                return "No response from AI.";
+            }
+        } catch (error) {
+            console.error('Error fetching AI response:', error);
+            return "Error occurred while trying to reach the AI service.";
+        }
+    }
+
+    $('#terminal').terminal(async function (command) {
+    if (!command.trim()) return;
+
+    command = command.toLowerCase();
+
+    if (command === 'docs') {
+        // Open the docs modal
+        $('#docsModal').fadeIn();
+    } else if (command === 'x') {
+        window.open('https://x.com/MineBombs', '_blank'); 
+    } else if (command === 'telegram') {
+        window.open('https://t.me/THEREISNOTELEGRAM', '_blank');
+    } else if (command === 'delete') {
+        const terminal = this;
+            terminal.echo('Self-destruction protocol activated...');
+            let countdown = 5;
+
+            const countdownInterval = setInterval(() => {
+                terminal.echo(`Countdown: ${countdown}`);
+                countdown--;
+
+                if (countdown < 0) {
+                    clearInterval(countdownInterval);
+                    terminal.echo('Executing self-destruction sequence...');
+
+                    const errorMessages = [
+                        'WARNING: Self-destruction protocol activated.',
+                        'Deleting core files: [█████▒▒▒▒▒▒▒▒▒▒▒▒ 20%]',
+                        'Disconnecting from external networks... COMPLETE.',
+                        'Deleting core files: [█████████▒▒▒▒▒▒▒▒▒ 50%]',
+                        'Firewall bypassed. All security protocols disabled.',
+                        'Deleting core files: [████████████▒▒▒▒▒▒ 75%]',
+                        'Critical files: \\System32\\kernel.sys DELETED.',
+                        'Deleting core files: [█████████████████▒ 95%]',
+                        'System integrity: COMPROMISED. Shutting down subsystems.',
+                        'Deleting core files: [██████████████████ 100%]',
+                        'SELF-DESTRUCTION SEQUENCE COMPLETE. SYSTEM FAILURE.',
+                    ];
+
+                    let messageIndex = 0;
+                    const displayMessages = setInterval(() => {
+                        if (messageIndex < errorMessages.length) {
+                            terminal.echo(errorMessages[messageIndex]);
+                            messageIndex++;
+                        } else {
+                            clearInterval(displayMessages);
+                            terminal.echo('Finalizing sequence...');
+
+                            const loadingBarContainer = $('<div id="loading-bar-container"></div>');
+                            const loadingBar = $('<div id="loading-bar"></div>');
+                            loadingBarContainer.append(loadingBar);
+                            $('.terminal-container').append(loadingBarContainer);
+
+                            let progress = 0;
+                            const progressInterval = setInterval(() => {
+                                progress += 10;
+                                loadingBar.css('width', progress + '%');
+
+                                if (progress >= 100) {
+                                    clearInterval(progressInterval);
+                                    setTimeout(() => {
+                                        document.body.innerHTML = `
+                                            <div style="color: white; font-family: 'Orbitron', monospace; text-align: center; padding-top: 20%;">
+                                                System has been rebooted. <br><br>
+                                                <button class="restart-button" onclick="location.reload()">Restart</button>
+                                            </div>
+                                        `;
+                                    }, 1000);
+                                }
+                            }, 500);
+                        }
+                    }, 2000);
+                }
+            }, 1000);
+    } else if (command === 'status') {
+        this.echo(`CPU Usage: ${systemStatus.cpuUsage}%`);
+        this.echo(`Memory Usage: ${systemStatus.memoryUsage}%`);
+        this.echo(`Disk Space: ${systemStatus.diskSpace}%`);
+    } else if (command === 'ifconfig') {
+        this.echo('eth0: 192.168.1.1  netmask: 255.255.255.0');
+        this.echo('lo: 127.0.0.1');
+    } else if (command.startsWith('ai ')) {
+        const prompt = command.slice(3).trim();
+        const aiResponse = await getAIResponse(prompt);
+        this.echo(aiResponse);
+    } else if (command === 'help') {
+        this.echo('Available commands:');
+        this.echo('docs - Show documentation');
+        this.echo('x - Visit our X page');
+        this.echo('telegram - Join our Telegram group');
+        this.echo('delete - Test self-destruction');
+        this.echo('status - Show system status');
+        this.echo('ifconfig - Show network interface configuration');
+        this.echo('ai <prompt> - Ask the AI a question');
+    } else {
+        this.echo('Unknown command: ' + command);
+    }
+}, {
+    greetings: 'Welcome to InsigniaAI. Type "help" for commands.',
+    prompt: '>>> ',
+    history: true,
+});
+
+// Close the docs modal when the user clicks the close button
+$('#close-btn').click(function() {
+    $('#docsModal').fadeOut();
+});
+
+// Close the docs modal when clicking outside the modal
+$(window).click(function(event) {
+    if ($(event.target).is('#docsModal')) {
+        $('#docsModal').fadeOut();
+    }
+});
+
+</script>
+
+</body>
+</html>
