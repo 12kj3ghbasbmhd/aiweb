@@ -1,110 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
-<title>InsigniaAI</title>
-<link href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" rel="stylesheet"/>
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+    <title>InsigniaAI</title>
+    <link href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" rel="stylesheet"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    :root {
-        --color: #ffffff; 
-        --background: #000000; 
-        --size: 3;
-        --animation: terminal-blink;
-        --primary-bg: #000000;
-        --primary-color: white;
-    }
+        :root {
+            --color: #00ff00;
+            --background: #000000;
+            --size: 3;
+            --animation: terminal-blink;
+            --primary-bg: #000000;
+            --primary-color: white;
+        }
 
-    body {
-        background-color: var(--background);
-        color: var(--color);
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-        font-family: 'Orbitron', monospace;
-        flex-direction: column;
-        overflow: hidden;
-    }
+        body {
+            background: radial-gradient(circle, #000 70%, #001a00 100%);
+            color: var(--color);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            font-family: 'Orbitron', monospace;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative; 
+        }
 
-    .navbar {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background-color: #111;
-        padding: 10px;
-        text-align: center;
-        border-radius: 5px;
-    }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
 
-    .navbar a {
-        color: var(--color);
-        text-decoration: none;
-        padding: 10px;
-        font-size: 1.2rem;
-    }
-
-    .navbar a:hover {
-        background-color: #444;
-        border-radius: 5px;
-    }
-
-    .terminal-container {
-        width: 70%; 
-        max-width: 10000px; 
-        height: 80vh; 
-        padding: 20px;
-        background-color: var(--background);
-        color: var(--color);
-        font-size: 1.4rem; 
-        overflow: auto;
-        border: 2px solid var(--color); 
-        border-radius: 10px;
-    }
-
-    #loading-bar-container {
-        width: 100%;
-        background-color: #333;
-        border: 1px solid #555;
-        height: 20px;
-        border-radius: 5px;
-        margin: 10px 0;
-    }
-
-    #loading-bar {
-        width: 0;
-        height: 100%;
-        background-color: #f32121;
-        border-radius: 5px;
-    }
-
-    .restart-button {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 18px;
-        font-family: 'Orbitron', monospace;
-        color: white;
-        background-color: #f32121;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-
-    .restart-button:hover {
-        background-color: #c91818;
-    }
+        .terminal-container {
+            opacity: 0;  
+            animation: fadeIn 1s ease-in forwards;
+            animation-delay: 0.5s;  
+            position: relative;
+            width: 70%;
+            max-width: 10000px;
+            height: 80vh;
+            padding: 20px;
+            background-color: var(--background);
+            color: var(--color);
+            font-size: 1.4rem;
+            overflow: auto;
+            border: 2px solid var(--color);
+            border-radius: 10px;
+            z-index: 20;
+        }
 
 
-        /* Large modal styling */
+        #loading-bar-container {
+            width: 100%;
+            background-color: #333;
+            border: 1px solid #555;
+            height: 20px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        #loading-bar {
+            width: 0;
+            height: 100%;
+            background-color: #f32121;
+            border-radius: 5px;
+        }
+
+        .restart-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-family: 'Orbitron', monospace;
+            color: white;
+            background-color: #f32121;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .restart-button:hover {
+            background-color: #c91818;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -143,22 +135,43 @@
             line-height: 1.8;
         }
 
-</style>
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1; 
+        }
+
+        #ar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #parallax-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <div class="navbar">
-        <a href="index.html">Home</a>
-        <a href="htb.html">How to Buy</a>
-        <a href="faq.html">FAQ</a>
-        <a href="blog.html">Blog</a>
-    </div>
 
     <div class="terminal-container">
         <div class="terminal" id="terminal"></div>
+    </div>    
+    <div id="ar-overlay">
+        <canvas id="parallax-canvas"></canvas>
     </div>
-
-    <!-- Modal HTML -->
+    
     <div id="docsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -192,81 +205,78 @@
         </div>
     </div>
 
+    <canvas id="canvas"></canvas>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
-<script>
-    let systemStatus = {
-        cpuUsage: Math.floor(Math.random() * (60 - 20 + 1)) + 20,  // CPU usage between 20% and 60%
-        memoryUsage: Math.floor(Math.random() * (70 - 50 + 1)) + 50,  // Memory usage between 50% and 70%
-        diskSpace: 76,  // Disk space set to always be 76%
-    };
-
-    async function getAIResponse(prompt) {
-        const apiUrl = "https://api.together.ai/v1/chat/completions"; 
-        const apiKey = "3cef9180f995a94db05f300c4920efb6e00b267e7c20fc0e235d7ec681f7de0a"; 
-        const payload = {
-            model: "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO",
-            messages: [
-                { role: 'system', content: 'You are a helpful assistant.' },
-                { role: 'user', content: prompt }
-            ],
-            max_tokens: 50, 
-            temperature: 0.7,
-            top_p: 0.7,
-            top_k: 50,
-            repetition_penalty: 1,
-            stop: ["<|eot_id|>", "<|eom_id|>"],
-            stream: false
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
+    <script>
+        // SYSTEM STATUS
+        let systemStatus = {
+            cpuUsage: Math.floor(Math.random() * (60 - 20 + 1)) + 20,  
+            memoryUsage: Math.floor(Math.random() * (70 - 50 + 1)) + 50,  
+            diskSpace: 76,  
         };
+// AI
+        async function getAIResponse(prompt) {
+            const apiUrl = "https://api.together.ai/v1/chat/completions"; 
+            const apiKey = "3cef9180f995a94db05f300c4920efb6e00b267e7c20fc0e235d7ec681f7de0a"; 
+            const payload = {
+                model: "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO",
+                messages: [
+                    { role: 'system', content: 'You are a helpful assistant.' },
+                    { role: 'user', content: prompt }
+                ],
+                max_tokens: 50, 
+                temperature: 0.7,
+                top_p: 0.7,
+                top_k: 50,
+                repetition_penalty: 1,
+                stop: ["<|eot_id|>", "<|eom_id|>"],
+                stream: false
+            };
 
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify(payload)
-            });
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-            const data = await response.json();
-            if (data.choices && data.choices[0].message.content) {
-                let aiResponse = data.choices[0].message.content;
+                const data = await response.json();
+                if (data.choices && data.choices[0].message.content) {
+                    let aiResponse = data.choices[0].message.content;
 
-                // Post-process the response to limit it to 2-3 sentences
-                let sentences = aiResponse.split('.'); // Split the response into sentences
-                sentences = sentences.filter(sentence => sentence.trim() !== ''); // Remove empty sentences
+                    let sentences = aiResponse.split('.'); 
+                    sentences = sentences.filter(sentence => sentence.trim() !== ''); 
+                    const limitedResponse = sentences.slice(0, 3).join('. ') + '.';
 
-                // Join only the first 2-3 sentences
-                const limitedResponse = sentences.slice(0, 3).join('. ') + '.';
-
-                return limitedResponse;
-            } else {
-                return "No response from AI.";
+                    return limitedResponse;
+                } else {
+                    return "No response from AI.";
+                }
+            } catch (error) {
+                console.error('Error fetching AI response:', error);
+                return "Error occurred while trying to reach the AI service.";
             }
-        } catch (error) {
-            console.error('Error fetching AI response:', error);
-            return "Error occurred while trying to reach the AI service.";
         }
-    }
+//COMMANDS
+        $('#terminal').terminal(async function (command) {
+        if (!command.trim()) return;
 
-    $('#terminal').terminal(async function (command) {
-    if (!command.trim()) return;
+        command = command.toLowerCase();
 
-    command = command.toLowerCase();
-
-    if (command === 'docs') {
-        // Open the docs modal
-        $('#docsModal').fadeIn();
-    } else if (command === 'x') {
-        window.open('https://x.com/MineBombs', '_blank'); 
-    } else if (command === 'telegram') {
-        window.open('https://t.me/THEREISNOTELEGRAM', '_blank');
-    } else if (command === 'delete') {
-        const terminal = this;
+        if (command === 'docs') {
+            $('#docsModal').fadeIn();
+        } else if (command === 'x') {
+            window.open('https://x.com/MineBombs', '_blank'); 
+        } 
+            else if (command === 'delete') {
+            const terminal = this;
             terminal.echo('Self-destruction protocol activated...');
-            let countdown = 5;
+            let countdown = 3;
 
             const countdownInterval = setInterval(() => {
                 terminal.echo(`Countdown: ${countdown}`);
@@ -325,50 +335,126 @@
                     }, 2000);
                 }
             }, 1000);
-    } else if (command === 'status') {
-        this.echo(`CPU Usage: ${systemStatus.cpuUsage}%`);
-        this.echo(`Memory Usage: ${systemStatus.memoryUsage}%`);
-        this.echo(`Disk Space: ${systemStatus.diskSpace}%`);
-    } else if (command === 'ifconfig') {
-        this.echo('eth0: 192.168.1.1  netmask: 255.255.255.0');
-        this.echo('lo: 127.0.0.1');
-    } else if (command.startsWith('ai ')) {
-        const prompt = command.slice(3).trim();
-        const aiResponse = await getAIResponse(prompt);
-        this.echo(aiResponse);
-    } else if (command === 'help') {
-        this.echo('Available commands:');
-        this.echo('docs - Show documentation');
-        this.echo('x - Visit our X page');
-        this.echo('telegram - Join our Telegram group');
-        this.echo('status - Show system status');
-        this.echo('ifconfig - Show network interface configuration');
-        this.echo('ai <prompt> - Ask the AI a question');
-        this.echo('ca - pending')
-        this.echo('delete - ???');
-        this.echo('clear - clear previous chats')
-    } else {
-        this.echo('Unknown command: ' + command);
+        } else if (command === 'status') {
+            this.echo(`CPU Usage: ${systemStatus.cpuUsage}%`);
+            this.echo(`Memory Usage: ${systemStatus.memoryUsage}%`);
+            this.echo(`Disk Space: ${systemStatus.diskSpace}%`);
+        } else if (command.startsWith('ai ')) {
+            const prompt = command.slice(3).trim();
+            const aiResponse = await getAIResponse(prompt);
+            this.echo(aiResponse);
+        } else if (command === 'help') {
+            this.echo('Available commands:');
+            this.echo('docs - Show documentation');
+            this.echo('x - Visit our X page');
+            this.echo("status - Show Insignia's status");
+            this.echo('ai <prompt> - Ask the Insignia a question');
+            this.echo('ca - pending');
+            this.echo('delete - ???');
+            this.echo('clear - Clear the terminal history');
+        } else if (command === 'clear') {
+            this.clear();
+        } else {
+            this.echo('Unknown command: ' + command);
+        }
+        }, {
+            greetings: 'Welcome to InsigniaAI. Type "help" to begin.',
+            name: 'InsigniaAI Terminal',
+            prompt: '>>> ',
+            history: true,
+
+        });
+
+        //DOCS
+        $('#close-btn').click(function() {
+            $('#docsModal').fadeOut();
+        });
+
+        $(window).click(function(event) {
+            if ($(event.target).is('#docsModal')) {
+                $('#docsModal').fadeOut();
+            }
+        });
+
+// PARTICLES G
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
-}, {
-    greetings: 'Welcome to InsigniaAI. Type "help" for commands.',
-    prompt: '>>> ',
-    history: true,
-});
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-// Close the docs modal when the user clicks the close button
-$('#close-btn').click(function() {
-    $('#docsModal').fadeOut();
-});
+    const particleCount = 700;
+    const particles = [];
 
-// Close the docs modal when clicking outside the modal
-$(window).click(function(event) {
-    if ($(event.target).is('#docsModal')) {
-        $('#docsModal').fadeOut();
+    for (let i = 0; i < particleCount; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 4 + 1,
+            speedX: Math.random() * 2 - 1,
+            speedY: Math.random() * 2 - 1,
+        });
     }
-});
 
-</script>
+    function updateParticles(mouseX, mouseY) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        particles.forEach((particle) => {
+            particle.x += particle.speedX;
+            particle.y += particle.speedY;
+
+            if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
+            if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
+
+            if (mouseX && mouseY) {
+                const dx = mouseX - particle.x;
+                const dy = mouseY - particle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 100) {
+                    particle.x -= dx * 0.03;
+                    particle.y -= dy * 0.03;
+                }
+            }
+
+            ctx.save(); 
+            ctx.shadowBlur = 20; 
+            ctx.shadowColor = 'rgba(0, 255, 0, 1)'; 
+
+
+            const gradient = ctx.createRadialGradient(
+                particle.x, particle.y, 0,
+                particle.x, particle.y, particle.size * 2
+            );
+            gradient.addColorStop(0, 'rgba(0, 255, 0, 1)'); 
+            gradient.addColorStop(1, 'rgba(0, 255, 0, 0)'); 
+
+            ctx.fillStyle = gradient;
+
+
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore(); 
+        });
+    }
+
+    let mouseX, mouseY;
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function animate() {
+        updateParticles(mouseX, mouseY);
+        requestAnimationFrame(animate);
+    }
+    animate();
+    </script>
 </body>
 </html>
